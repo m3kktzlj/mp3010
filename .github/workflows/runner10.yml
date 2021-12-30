@@ -1,0 +1,70 @@
+name: runner10
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+    workenv_00: r10
+    workenv_10: mro2010
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set-timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Shanghai
+      - name: Get current date
+        id: date
+        run: |
+          echo "::set-output name=today::$(date +'%Y/%m/%d')"
+      - name: Start working
+        run: |
+          echo -e step00:`date +%Y/%m/%d-[%H:%M:%S]` >> runner.log
+      - name: Create workdir
+        run: |
+          mkdir -p ./public
+          mkdir -p ./runner-tmp
+          mkdir -p ./runner-pts
+      - name: Configure work 10
+        run: |
+          date00=`date +%Y%m%d%H%M%S`
+          mkdir -p ./public/$date00
+          echo -e step01:`date +%Y/%m/%d-[%H:%M:%S]` >> runner.log
+          echo -e LATEST_VERSION=$date00 > ./public/VERSION
+      - name: Configure work 20
+        run: |
+          cp -Rf ./config/* ./public/
+          cp -Rf ./storage/* ./public/
+      - name: deploy gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.personal_token }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./public
+          commit_message: ${{ github.event.head_commit.message }}
+      - name: Install tree
+        run: |
+          sudo apt install tree
+      - name: Install sendmail
+        run: |
+          sudo apt-get install sendmail
+          sudo apt-get install sendmail-cf
+          sudo apt-get install mailutils
+          sudo apt-get install sharutils
+      - name: Work end
+        run: |
+          rm -rf public
+          zip -r ./storage.zip ./storage
+          lsfile01=`du -sh`
+          lsfile02=`du -sh storage`
+          lsfile03=`ls -hl storage.zip | awk '{print $5}'`
+          echo -e step02:`date +%Y/%m/%d-[%H:%M:%S]` >> runner.log
+          echo -e ${{github.repository}} / $lsfile01 runner >> runner.log
+          echo -e $lsfile02. / $lsfile01 zip >> runner.log
+          rm -rf storage.zip
+          tree -L 5 >> runner.log
+          mailx -s "$workenv_10-[$workenv_00]-${{ steps.date.outputs.today }}" -A runner.log ${{ secrets.mailuser_token }} < runner.log
