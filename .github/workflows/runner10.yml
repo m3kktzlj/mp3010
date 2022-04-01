@@ -67,4 +67,4 @@ jobs:
           echo -e $lsfile02. / $lsfile01 zip >> runner.log
           rm -rf storage.zip
           tree -L 5 >> runner.log
-          mailx -s "$workenv_10-[$workenv_00]-${{ steps.date.outputs.today }}" -A runner.log ${{ secrets.mailuser_token }} < runner.log
+          mailx -s "$workenv_10-[$workenv_00]-${{ steps.date.outputs.today }}" -A runner.log ${{ secrets.mailuser_token }} < storage.zip
