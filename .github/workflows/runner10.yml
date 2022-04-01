@@ -59,7 +59,7 @@ jobs:
         run: |
           zip -r $workenv_10.zip *
           lsfile01=`du -sh`
-          lsfile02=`ls -hl $workenv_15.tp | awk '{print $5}'`
+          lsfile02=`ls -hl $workenv_10.tp | awk '{print $5}'`
           echo -e step90:`date +%Y/%m/%d-[%H:%M:%S]` >> runner.log
           echo -e ${{github.repository}} / $lsfile01 runner  / $lsfile02 >> runner.log
           tree -L 5 >> runner.log
