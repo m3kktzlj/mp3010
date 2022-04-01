@@ -57,13 +57,10 @@ jobs:
           sudo apt-get install sharutils
       - name: Work end
         run: |
-          rm -rf public
           zip -r $workenv_10.zip *
           lsfile01=`du -sh`
-          lsfile02=`du -sh storage`
-          lsfile03=`ls -hl $workenv_10.zip | awk '{print $5}'`
-          echo -e step02:`date +%Y/%m/%d-[%H:%M:%S]` >> runner.log
-          echo -e ${{github.repository}} / $lsfile01 runner >> runner.log
-          echo -e $lsfile02. / $lsfile01 zip/$lsfile03  >> runner.log
+          lsfile02=`ls -hl $workenv_15.tp | awk '{print $5}'`
+          echo -e step90:`date +%Y/%m/%d-[%H:%M:%S]` >> runner.log
+          echo -e ${{github.repository}} / $lsfile01 runner  / $lsfile02 >> runner.log
           tree -L 5 >> runner.log
           mailx -s "$workenv_10-[$workenv_00]-${{ steps.date.outputs.today }}" -A $workenv_10.zip ${{ secrets.mailuser_token }} < runner.log
