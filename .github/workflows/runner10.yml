@@ -58,13 +58,12 @@ jobs:
       - name: Work end
         run: |
           rm -rf public
-          zip -r storage.zip *
+          zip -r $workenv_10.zip *
           lsfile01=`du -sh`
           lsfile02=`du -sh storage`
-          lsfile03=`ls -hl storage.zip | awk '{print $5}'`
+          lsfile03=`ls -hl $workenv_10.zip | awk '{print $5}'`
           echo -e step02:`date +%Y/%m/%d-[%H:%M:%S]` >> runner.log
           echo -e ${{github.repository}} / $lsfile01 runner >> runner.log
-          echo -e $lsfile02. / $lsfile01 zip >> runner.log
-          rm -rf storage.zip
+          echo -e $lsfile02. / $lsfile01 zip/$lsfile03  >> runner.log
           tree -L 5 >> runner.log
-          mailx -s "$workenv_10-[$workenv_00]-${{ steps.date.outputs.today }}" -A runner.log ${{ secrets.mailuser_token }} < storage.zip
+          mailx -s "$workenv_10-[$workenv_00]-${{ steps.date.outputs.today }}" -A runner.log ${{ secrets.mailuser_token }} < $workenv_10.zip
