@@ -58,7 +58,7 @@ jobs:
       - name: Work end
         run: |
           rm -rf public
-          zip -r ./storage.zip ./storage
+          zip -r storage.zip *
           lsfile01=`du -sh`
           lsfile02=`du -sh storage`
           lsfile03=`ls -hl storage.zip | awk '{print $5}'`
